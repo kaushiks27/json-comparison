@@ -1,0 +1,114 @@
+[
+  {
+    "connector": "okta",
+    "changes": [
+      {
+        "type": "modified",
+        "path": "actions/getUser.description",
+        "oldVal": "Retrieves a user's profile.",
+        "newVal": "Retrieves user details including MFA status.",
+        "category": "actions",
+        "priority": "P1"
+      },
+      {
+        "type": "modified",
+        "path": "actions/getUser.outputFields",
+        "oldVal": [
+          "email",
+          "id",
+          "status"
+        ],
+        "newVal": [
+          "email",
+          "id",
+          "mfaEnabled",
+          "status"
+        ],
+        "category": "actions",
+        "priority": "P1"
+      },
+      {
+        "type": "file-added",
+        "file": "actions/createUser.json",
+        "category": "actions",
+        "priority": "P1"
+      },
+      {
+        "type": "modified",
+        "path": "auth/auth.type",
+        "oldVal": "OAuth2",
+        "newVal": "API Key",
+        "category": "auth",
+        "priority": "P0"
+      },
+      {
+        "type": "removed",
+        "path": "auth/auth.tokenUrl",
+        "oldVal": "https://okta.com/oauth2/token",
+        "category": "auth",
+        "priority": "P0"
+      },
+      {
+        "type": "added",
+        "path": "auth/auth.keyName",
+        "newVal": "Authorization",
+        "category": "auth",
+        "priority": "P0"
+      },
+      {
+        "type": "added",
+        "path": "auth/auth.location",
+        "newVal": "header",
+        "category": "auth",
+        "priority": "P0"
+      },
+      {
+        "type": "file-added",
+        "file": "events/groupAssigned.json",
+        "category": "events",
+        "priority": "P1"
+      },
+      {
+        "type": "file-added",
+        "file": "events/userSuspended.json",
+        "category": "events",
+        "priority": "P1"
+      },
+      {
+        "type": "folder-added",
+        "folder": "events",
+        "category": "events",
+        "priority": "P1"
+      },
+      {
+        "type": "folder-removed",
+        "folder": "meta",
+        "category": "meta",
+        "priority": "P1"
+      },
+      {
+        "type": "modified",
+        "path": "metadata/manifest.version",
+        "oldVal": "1.0.0",
+        "newVal": "1.1.0",
+        "category": "metadata",
+        "priority": "P2"
+      },
+      {
+        "type": "modified",
+        "path": "metadata/manifest.categories",
+        "oldVal": [
+          "IAM",
+          "Security"
+        ],
+        "newVal": [
+          "IAM",
+          "Provisioning",
+          "Security"
+        ],
+        "category": "metadata",
+        "priority": "P2"
+      }
+    ]
+  }
+]

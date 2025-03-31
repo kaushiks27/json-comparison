@@ -1,0 +1,17 @@
+{
+  "name": "functional-change-detection",
+  "version": "1.0.0",
+  "description": "Advanced JSON Functional Change Detection Tool",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "json",
+    "diff",
+    "change-detection"
+  ],
+  "author": "",
+  "license": "MIT"
+}
