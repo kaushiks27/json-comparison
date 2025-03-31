@@ -1,0 +1,20 @@
+{
+  "name": "User Suspended",
+  "description": "Triggered when a user is suspended in Okta.",
+  "eventType": "user.lifecycle.suspend",
+  "trigger": {
+    "source": "okta",
+    "eventFilter": {
+      "field": "status",
+      "value": "SUSPENDED"
+    }
+  },
+  "payload": {
+    "fields": [
+      "id",
+      "email",
+      "suspendedAt",
+      "suspendedBy"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Get User",
+  "description": "Retrieves user details including MFA status.",
+  "httpMethod": "GET",
+  "endpoint": "/api/v1/users/${userId}",
+  "outputFields": [
+    "id",
+    "email",
+    "status",
+    "mfaEnabled"
+  ]
+}

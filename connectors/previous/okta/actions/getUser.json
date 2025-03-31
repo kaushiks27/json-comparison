@@ -1,0 +1,11 @@
+{
+  "name": "Get User",
+  "description": "Retrieves a user's profile.",
+  "httpMethod": "GET",
+  "endpoint": "/api/v1/users/${userId}",
+  "outputFields": [
+    "id",
+    "email",
+    "status"
+  ]
+}

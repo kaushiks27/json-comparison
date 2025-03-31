@@ -1,0 +1,22 @@
+{
+  "name": "Group Assigned",
+  "description": "Triggered when a user is assigned to a group.",
+  "eventType": "group.user_membership.add",
+  "trigger": {
+    "source": "okta",
+    "eventFilter": {
+      "field": "group.name",
+      "matchType": "regex",
+      "value": ".*Admins.*"
+    }
+  },
+  "payload": {
+    "fields": [
+      "userId",
+      "groupId",
+      "groupName",
+      "assignedBy",
+      "assignedAt"
+    ]
+  }
+}

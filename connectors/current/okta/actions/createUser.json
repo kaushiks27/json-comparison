@@ -1,0 +1,15 @@
+{
+  "name": "Create User",
+  "description": "Creates a new user in Okta.",
+  "httpMethod": "POST",
+  "endpoint": "/api/v1/users",
+  "inputFields": [
+    "email",
+    "firstName",
+    "lastName"
+  ],
+  "outputFields": [
+    "id",
+    "status"
+  ]
+}

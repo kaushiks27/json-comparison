@@ -1,0 +1,12 @@
+{
+  "name": "Deactivate User",
+  "description": "Deactivates a user account.",
+  "httpMethod": "POST",
+  "endpoint": "/api/v1/users/${userId}/lifecycle/deactivate",
+  "inputFields": [
+    "userId"
+  ],
+  "outputFields": [
+    "status"
+  ]
+}
