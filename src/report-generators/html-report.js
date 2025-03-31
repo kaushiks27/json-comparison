@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { generateStats } = require('../prioritizer');
+const { generateStats } = require('../advanced-prioritizer');
 
 /**
  * Generate HTML report

@@ -3,9 +3,9 @@
  */
 
 const fs = require('fs');
-const { getChangeEmoji } = require('../prioritizer');
+const { getChangeEmoji } = require('../advanced-prioritizer');
 const { formatValue } = require('../utils/file-utils');
-const { generateStats } = require('../prioritizer');
+const { generateStats } = require('../advanced-prioritizer');
 
 /**
  * Generate Markdown report

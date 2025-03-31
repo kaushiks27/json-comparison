@@ -1,17 +1,67 @@
 {
   "name": "functional-change-detection",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Advanced JSON Functional Change Detection Tool",
   "main": "src/index.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "keywords": [
     "json",
     "diff",
-    "change-detection"
+    "change-detection",
+    "functional-analysis"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": "Your Organization",
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^3.8.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "eslint": "^8.40.0",
+    "husky": "^8.0.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/templates/"
+    ]
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src/",
+      "config/"
+    ],
+    "ext": "js,json",
+    "ignore": [
+      "src/**/*.spec.js"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "warn"
+    }
+  }
 }

@@ -879,6 +879,11 @@ cat > templates/html-template.html << 'EOF'
       color: var(--color-primary);
       text-decoration: none;
     }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
     
     a:hover {
       text-decoration: underline;
@@ -2661,6 +2666,7 @@ cat > templates/html-template.html << 'EOF'
       color: var(--color-primary);
       text-decoration: none;
     }
+
 
     a {
       color: var(--color-primary);
@@ -4826,3 +4832,5 @@ cat > templates/html-template.html << 'EOF'
       color: var(--color-primary);
       text-decoration: none;
     }
+
+    

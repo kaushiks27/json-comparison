@@ -1,0 +1,22 @@
+{
+  "maxComparisonDepth": 5,
+  "strictValidation": true,
+  "reportFormats": ["html", "markdown", "json"],
+  "ignoredFolders": ["meta", ".git"],
+  "performanceLogging": true,
+  "logLevel": "info",
+  "connectorSources": {
+    "previous": "./connectors/previous",
+    "current": "./connectors/current"
+  },
+  "priorityRules": {
+    "critical": {
+      "keywords": ["auth", "security", "token"],
+      "priority": "P0"
+    },
+    "major": {
+      "keywords": ["endpoint", "action", "event"],
+      "priority": "P1"
+    }
+  }
+}

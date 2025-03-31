@@ -1,45 +1,122 @@
-/**
- * Advanced JSON Functional Change Detection
- * Main entry point
- */
-
 const path = require('path');
-const { compareConnectors } = require('./comparator');
-const { generateHTMLReport } = require('./report-generators/html-report');
-const { generateMarkdownReport } = require('./report-generators/markdown-report');
-const { generateJSONReport } = require('./report-generators/json-report');
+const fs = require('fs').promises;
 
-// Paths to connector directories
-const prevPath = path.join(__dirname, '..', 'connectors', 'previous');
-const currPath = path.join(__dirname, '..', 'connectors', 'current');
+// Import custom modules
+const config = require('./config-manager');
+const logger = require('./logger');
+const comparator = require('./advanced-comparator');
+const reportGenerator = require('./report-generator');
+const prioritizer = require('./advanced-prioritizer');
 
-async function run() {
-  console.log("🔍 Starting functional change detection...");
-  
-  // Compare connectors
-  console.log(`📂 Analyzing connectors in ${prevPath} and ${currPath}...`);
-  const comparisonResult = await compareConnectors(prevPath, currPath);
-  
-  // Generate reports
-  console.log("📝 Generating reports...");
-  
-  // Generate HTML report
-  await generateHTMLReport(comparisonResult, path.join(__dirname, '..', 'functional-change-report.html'));
-  console.log("✅ HTML report generated: functional-change-report.html");
-  
-  // Generate Markdown report
-  await generateMarkdownReport(comparisonResult, path.join(__dirname, '..', 'functional-change-report.md'));
-  console.log("✅ Markdown report generated: functional-change-report.md");
-  
-  // Generate JSON report
-  await generateJSONReport(comparisonResult, path.join(__dirname, '..', 'functional-change-data.json'));
-  console.log("✅ JSON data generated: functional-change-data.json");
-  
-  console.log("✨ Process complete!");
+class FunctionalChangeDetectionTool {
+  constructor() {
+    this.connectorSources = config.get('connectorSources', {
+      previous: path.join(process.cwd(), 'connectors', 'previous'),
+      current: path.join(process.cwd(), 'connectors', 'current')
+    });
+  }
+
+  async validateEnvironment() {
+    try {
+      // Check connector source directories
+      await Promise.all([
+        fs.access(this.connectorSources.previous),
+        fs.access(this.connectorSources.current)
+      ]);
+
+      logger.info('Environment validation successful', {
+        previousPath: this.connectorSources.previous,
+        currentPath: this.connectorSources.current
+      });
+    } catch (error) {
+      logger.error('Environment validation failed', {
+        error: error.message,
+        paths: this.connectorSources
+      });
+      throw new Error('Invalid connector source directories');
+    }
+  }
+
+  async runComparison() {
+    const timer = logger.track('Full Comparison Process');
+
+    try {
+      // Validate environment before processing
+      await this.validateEnvironment();
+
+      // Perform connector comparison
+      const comparisonResults = await comparator.compareConnectors(
+        this.connectorSources.previous, 
+        this.connectorSources.current
+      );
+
+      // Enrich comparison results with priority information
+      const enrichedResults = comparisonResults.map(result => ({
+        ...result,
+        changes: result.changes.map(change => 
+          prioritizer.classifyChange(change)
+        )
+      }));
+
+      // Generate comprehensive report
+      const reportPaths = await reportGenerator.generateReports(enrichedResults);
+
+      const duration = timer.end();
+      
+      // Generate summary report
+      const changeSummary = enrichedResults.reduce((summary, connector) => {
+        summary[connector.connector] = prioritizer.generateChangeReport(connector.changes);
+        return summary;
+      }, {});
+
+      logger.info('Comparison process complete', {
+        duration: `${duration}ms`,
+        reportPaths,
+        changeSummary
+      });
+
+      return {
+        results: enrichedResults,
+        reportPaths,
+        changeSummary
+      };
+    } catch (error) {
+      logger.error('Comparison process failed', error);
+      throw error;
+    }
+  }
+
+  async start() {
+    try {
+      logger.info('Functional Change Detection Tool Starting');
+      
+      const result = await this.runComparison();
+      
+      logger.info('Change detection completed successfully', {
+        totalConnectors: result.results.length,
+        reportGenerated: result.reportPaths.length > 0
+      });
+
+      return result;
+    } catch (error) {
+      logger.error('Functional Change Detection Tool Failed', error);
+      process.exitCode = 1;
+      return null;
+    }
+  }
 }
 
-// Run the program
-run().catch(error => {
-  console.error(`❌ Error: ${error.message}`);
-  process.exit(1);
-});
+// Export a singleton instance
+module.exports = new FunctionalChangeDetectionTool();
+
+// If run directly, start the process
+if (require.main === module) {
+  (async () => {
+    try {
+      await module.exports.start();
+    } catch (error) {
+      console.error('Unhandled error:', error);
+      process.exit(1);
+    }
+  })();
+}
