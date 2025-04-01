@@ -1,3 +1,6 @@
+// 3. src/advanced-prioritizer.js
+// ===============================
+// Fix issues with imports and add missing functions
 const config = require('./config-manager');
 const logger = require('./logger');
 
@@ -99,11 +102,11 @@ class AdvancedPrioritizer {
     const keywordMatches = ruleSet.keywords.filter(keyword => 
       Object.values(context).some(val => val.includes(keyword))
     );
-    score += keywordMatches.length * ruleSet.factors.keywordMatch;
+    score += keywordMatches.length * (ruleSet.factors?.keywordMatch || 1.0);
 
     // Path matching
     if (ruleSet.keywords.some(keyword => context.path.includes(keyword))) {
-      score += ruleSet.factors.pathMatch;
+      score += ruleSet.factors?.pathMatch || 1.0;
     }
 
     // Structural change assessment
@@ -112,7 +115,7 @@ class AdvancedPrioritizer {
       'file-added', 'file-removed'
     ];
     if (structuralChangeIndicators.includes(context.type)) {
-      score += ruleSet.factors.structuralChange;
+      score += ruleSet.factors?.structuralChange || 1.0;
     }
 
     return score;
@@ -177,6 +180,72 @@ class AdvancedPrioritizer {
     });
 
     return summary;
+  }
+
+  // Get change emoji based on type and priority
+  getChangeEmoji(type, priority) {
+    switch (type) {
+      case 'file-added':
+      case 'folder-added':
+      case 'added':
+        return '➕';
+      case 'file-removed':
+      case 'folder-removed':
+      case 'removed':
+        return '❌';
+      case 'modified':
+        return '✏️';
+      default:
+        // Use priority-based emoji for other cases
+        if (priority === 'P0') return '🚨';
+        if (priority === 'P1') return '⚠️';
+        return 'ℹ️';
+    }
+  }
+
+  // Generate statistics from report data
+  generateStats(processedData) {
+    const stats = {
+      priority: { P0: 0, P1: 0, P2: 0 },
+      changeTypes: {
+        added: 0,
+        removed: 0,
+        modified: 0,
+        'file-added': 0,
+        'file-removed': 0,
+        'folder-added': 0,
+        'folder-removed': 0
+      },
+      categories: {}
+    };
+
+    processedData.forEach(connector => {
+      connector.changes.forEach(change => {
+        // Count priorities
+        stats.priority[change.priority || 'P2']++;
+
+        // Count change types
+        if (change.type) {
+          stats.changeTypes[change.type] = 
+            (stats.changeTypes[change.type] || 0) + 1;
+        }
+
+        // Count by category
+        const category = change.category || 'uncategorized';
+        if (!stats.categories[category]) {
+          stats.categories[category] = { 
+            total: 0, 
+            P0: 0, 
+            P1: 0, 
+            P2: 0 
+          };
+        }
+        stats.categories[category].total++;
+        stats.categories[category][change.priority || 'P2']++;
+      });
+    });
+
+    return stats;
   }
 }
 

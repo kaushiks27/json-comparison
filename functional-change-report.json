@@ -1,0 +1,179 @@
+[
+  {
+    "connector": "okta",
+    "changes": [
+      {
+        "type": "modified",
+        "path": "description",
+        "oldVal": "Retrieves a user's profile.",
+        "newVal": "Retrieves user details including MFA status.",
+        "category": "actions",
+        "priority": "P2",
+        "significance": {
+          "label": "Minor",
+          "description": "Low-impact change with minimal system effect.",
+          "actionRequired": "Standard review process"
+        }
+      },
+      {
+        "type": "modified",
+        "path": "outputFields",
+        "oldVal": [
+          "id",
+          "email",
+          "status"
+        ],
+        "newVal": [
+          "id",
+          "email",
+          "status",
+          "mfaEnabled"
+        ],
+        "category": "actions",
+        "priority": "P1",
+        "significance": {
+          "label": "Major",
+          "description": "Significant change affecting core features or system behavior.",
+          "actionRequired": "Detailed review and testing"
+        }
+      },
+      {
+        "type": "file-added",
+        "file": "actions/createUser.json",
+        "category": "actions",
+        "priority": "P1",
+        "significance": {
+          "label": "Major",
+          "description": "Significant change affecting core features or system behavior.",
+          "actionRequired": "Detailed review and testing"
+        }
+      },
+      {
+        "type": "modified",
+        "path": "type",
+        "oldVal": "OAuth2",
+        "newVal": "API Key",
+        "category": "auth",
+        "priority": "P0",
+        "significance": {
+          "label": "Critical",
+          "description": "Immediate attention required. Potential security or core functionality impact.",
+          "actionRequired": "Urgent review and mitigation"
+        }
+      },
+      {
+        "type": "removed",
+        "path": "tokenUrl",
+        "oldVal": "https://okta.com/oauth2/token",
+        "category": "auth",
+        "priority": "P0",
+        "significance": {
+          "label": "Critical",
+          "description": "Immediate attention required. Potential security or core functionality impact.",
+          "actionRequired": "Urgent review and mitigation"
+        }
+      },
+      {
+        "type": "added",
+        "path": "keyName",
+        "newVal": "Authorization",
+        "category": "auth",
+        "priority": "P2",
+        "significance": {
+          "label": "Minor",
+          "description": "Low-impact change with minimal system effect.",
+          "actionRequired": "Standard review process"
+        }
+      },
+      {
+        "type": "added",
+        "path": "location",
+        "newVal": "header",
+        "category": "auth",
+        "priority": "P0",
+        "significance": {
+          "label": "Critical",
+          "description": "Immediate attention required. Potential security or core functionality impact.",
+          "actionRequired": "Urgent review and mitigation"
+        }
+      },
+      {
+        "type": "folder-added",
+        "folder": "events",
+        "category": "events",
+        "priority": "P1",
+        "significance": {
+          "label": "Major",
+          "description": "Significant change affecting core features or system behavior.",
+          "actionRequired": "Detailed review and testing"
+        }
+      },
+      {
+        "type": "file-added",
+        "file": "events/groupAssigned.json",
+        "category": "events",
+        "priority": "P1",
+        "significance": {
+          "label": "Major",
+          "description": "Significant change affecting core features or system behavior.",
+          "actionRequired": "Detailed review and testing"
+        }
+      },
+      {
+        "type": "file-added",
+        "file": "events/userSuspended.json",
+        "category": "events",
+        "priority": "P1",
+        "significance": {
+          "label": "Major",
+          "description": "Significant change affecting core features or system behavior.",
+          "actionRequired": "Detailed review and testing"
+        }
+      },
+      {
+        "type": "modified",
+        "path": "version",
+        "oldVal": "1.0.0",
+        "newVal": "1.1.0",
+        "category": "metadata",
+        "priority": "P2",
+        "significance": {
+          "label": "Minor",
+          "description": "Low-impact change with minimal system effect.",
+          "actionRequired": "Standard review process"
+        }
+      },
+      {
+        "type": "modified",
+        "path": "categories",
+        "oldVal": [
+          "IAM",
+          "Security"
+        ],
+        "newVal": [
+          "IAM",
+          "Security",
+          "Provisioning"
+        ],
+        "category": "metadata",
+        "priority": "P0",
+        "significance": {
+          "label": "Critical",
+          "description": "Immediate attention required. Potential security or core functionality impact.",
+          "actionRequired": "Urgent review and mitigation"
+        }
+      },
+      {
+        "type": "folder-removed",
+        "folder": "meta",
+        "category": "meta",
+        "priority": "P2",
+        "significance": {
+          "label": "Minor",
+          "description": "Low-impact change with minimal system effect.",
+          "actionRequired": "Standard review process"
+        }
+      }
+    ]
+  }
+]

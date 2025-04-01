@@ -531,6 +531,11 @@
   <script>
     // Collect all categories
   for (const { changes } of reportData) {
+    // Add a safety check
+    if (typeof reportData === 'undefined' || !reportData) {
+      console.error('Report data not found');
+      return;
+    }
     for (const change of changes) {
       if (change.category) {
         categories[change.category] = true;
