@@ -122,12 +122,6 @@
       color: var(--color-primary);
       text-decoration: none;
     }
-
-
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-    }
     
     a:hover {
       text-decoration: underline;
@@ -411,6 +405,29 @@
       box-shadow: var(--shadow);
     }
     
+    /* Search container */
+    .search-container {
+      margin-bottom: 15px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      background-color: var(--color-light);
+      color: var(--color-text);
+    }
+    
+    .search-results {
+      display: none;
+      margin-top: 5px;
+      padding: 5px;
+      font-size: 12px;
+      color: var(--color-secondary);
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .header {
@@ -500,7 +517,7 @@
       <div class="export-group">
         <button id="btn-export-pdf" class="btn btn-sm">📄 Export PDF</button>
         <button id="btn-export-html" class="btn btn-sm">💾 Export HTML</button>
-        <button id="btn-export-md" class="btn btn-sm">📝 Export Markdown</button>
+        <button id="btn-export-markdown" class="btn btn-sm">📝 Export Markdown</button>
         <button id="btn-export-json" class="btn btn-sm">{ } Export JSON</button>
         <button id="btn-reset-filters" class="btn btn-sm btn-primary">🔄 Reset Filters</button>
       </div>
@@ -525,350 +542,10 @@
   
   <div class="back-to-top" id="back-to-top">↑</div>
   
-  <script src="../templates/scripts/filters.js"></script>
-  <script src="../templates/scripts/visualizations.js"></script>
-  <script src="../templates/scripts/interactivity.js"></script>
-  <script>
-    // Collect all categories
-  for (const { changes } of reportData) {
-    // Add a safety check
-    if (typeof reportData === 'undefined' || !reportData) {
-      console.error('Report data not found');
-      return;
-    }
-    for (const change of changes) {
-      if (change.category) {
-        categories[change.category] = true;
-        // Initialize filter state
-        filterState.category[change.category] = true;
-      }
-    }
-  }
-  
-  // Create filter checkboxes
-  for (const category of Object.keys(categories).sort()) {
-    const id = `filter-${category}`;
-    
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.id = id;
-    input.className = 'filter-checkbox';
-    input.checked = true;
-    input.dataset.category = category;
-    
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.className = 'filter-label';
-    label.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-    
-    categoryFilters.appendChild(input);
-    categoryFilters.appendChild(label);
-  }
-}
-
-// Generate report content
-function generateReportContent() {
-  const reportElement = document.getElementById('report-content');
-  let reportHTML = '';
-  
-  // Generate connector sections
-  for (const { connector, changes } of reportData) {
-    if (changes.length === 0) continue;
-    
-    // Determine if connector has critical changes
-    const hasCritical = changes.some(c => c.priority === 'P0');
-    
-    reportHTML += `
-      <h2 id="connector-${connector}">🔌 Connector: ${connector}</h2>
-      <details ${hasCritical ? 'open' : ''}>
-        <summary><strong>Changes (${changes.length})</strong></summary>
-    `;
-    
-    // Generate change summary
-    const summary = [];
-    if (changes.some(c => c.type === 'file-added')) {
-      summary.push('🆕 New files added');
-    }
-    if (changes.some(c => c.type === 'file-removed')) {
-      summary.push('🗑️ Files removed');
-    }
-    if (changes.some(c => c.type === 'folder-added')) {
-      summary.push('📁 New folders added');
-    }
-    if (changes.some(c => c.type === 'folder-removed')) {
-      summary.push('📁 Folders removed');
-    }
-    if (changes.some(c => c.type === 'modified' && c.path && c.path.includes('auth'))) {
-      summary.push('🔐 Auth changes');
-    }
-    if (changes.some(c => c.type === 'modified' && c.path && c.path.includes('outputFields'))) {
-      summary.push('📦 Output structure changes');
-    }
-    
-    reportHTML += '<h3>🧾 Summary of Changes</h3><ul>';
-    for (const item of summary) {
-      reportHTML += `<li>${item}</li>`;
-    }
-    reportHTML += '</ul>';
-    
-    // Group changes by priority
-    const changesByPriority = {
-      P0: [],
-      P1: [],
-      P2: []
-    };
-    
-    for (const change of changes) {
-      changesByPriority[change.priority].push(change);
-    }
-    
-    // Priority icons
-    const priorityIcons = {
-      P0: '🔴 Critical',
-      P1: '🟠 Major',
-      P2: '🟢 Minor'
-    };
-    
-    // Show changes grouped by priority
-    for (const priority of ['P0', 'P1', 'P2']) {
-      const priorityChanges = changesByPriority[priority];
-      if (priorityChanges.length === 0) continue;
-      
-      const openByDefault = priority === 'P0';
-      
-      reportHTML += `
-        <h3>${priorityIcons[priority]} Changes (${priorityChanges.length})</h3>
-        <details ${openByDefault ? 'open' : ''}>
-          <summary><strong>${priority === 'P0' ? 'Critical' : priority === 'P1' ? 'Major' : 'Minor'} Changes</strong></summary>
-      `;
-      
-      // Group by category
-      const categorizedChanges = {};
-      for (const change of priorityChanges) {
-        const category = change.category || 'general';
-        if (!categorizedChanges[category]) {
-          categorizedChanges[category] = [];
-        }
-        categorizedChanges[category].push(change);
-      }
-      
-      // Display changes by category
-      for (const [category, categoryChanges] of Object.entries(categorizedChanges)) {
-        const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1);
-        
-        if (Object.keys(categorizedChanges).length > 1) {
-          reportHTML += `<h4>📂 ${categoryTitle}</h4>`;
-        }
-        
-        // Display each change
-        for (const change of categoryChanges) {
-          const emoji = getChangeEmoji(change.type, change.priority);
-          const anchor = `${connector}-${change.category}-${change.type}-${change.path || change.file || change.folder}`.replace(/[^\w-]/g, '-');
-          
-          reportHTML += `<div id="${anchor}" data-priority="${change.priority}" data-type="${change.type}" data-category="${change.category}" class="change-item">`;
-          
-          if (change.type === 'file-added') {
-            reportHTML += `<p>${emoji} <strong>New file:</strong> <code>${change.file}</code></p>`;
-          } else if (change.type === 'file-removed') {
-            reportHTML += `<p>${emoji} <strong>Removed file:</strong> <code>${change.file}</code></p>`;
-          } else if (change.type === 'folder-added') {
-            reportHTML += `<p>${emoji} <strong>New folder added:</strong> <code>${change.folder}/</code></p>`;
-          } else if (change.type === 'folder-removed') {
-            reportHTML += `<p>${emoji} <strong>Folder removed:</strong> <code>${change.folder}/</code></p>`;
-          } else if (change.type === 'added') {
-            reportHTML += `
-              <p>${emoji} <strong>Added:</strong> <code>${change.path}</code></p>
-              <pre><code class="change-added">${JSON.stringify(change.newVal, null, 2)}</code></pre>
-            `;
-          } else if (change.type === 'removed') {
-            reportHTML += `
-              <p>${emoji} <strong>Removed:</strong> <code>${change.path}</code></p>
-              <pre><code class="change-removed">${JSON.stringify(change.oldVal, null, 2)}</code></pre>
-            `;
-          } else if (change.type === 'modified') {
-            // Word-level diff highlighting for simple values
-            const isSimpleValue = (
-              (typeof change.oldVal !== 'object' || change.oldVal === null) &&
-              (typeof change.newVal !== 'object' || change.newVal === null)
-            );
-            
-            reportHTML += `<p>${emoji} <strong>Changed:</strong> <code>${change.path}</code></p>`;
-            
-            if (isSimpleValue) {
-              // For simple values, show inline diff
-              const oldStr = String(change.oldVal);
-              const newStr = String(change.newVal);
-              
-              reportHTML += `
-                <div class="inline-diff">
-                  <p><strong>Before:</strong> <code class="change-removed">${oldStr}</code></p>
-                  <p><strong>After:</strong> <code class="change-added">${newStr}</code></p>
-                </div>
-              `;
-            } else {
-              // For complex objects, show side-by-side comparison
-              reportHTML += `
-                <table>
-                  <tr>
-                    <th>Before</th>
-                    <th>After</th>
-                  </tr>
-                  <tr>
-                    <td><pre><code class="change-removed">${JSON.stringify(change.oldVal, null, 2)}</code></pre></td>
-                    <td><pre><code class="change-added">${JSON.stringify(change.newVal, null, 2)}</code></pre></td>
-                  </tr>
-                </table>
-              `;
-            }
-          }
-          
-          reportHTML += '</div>';
-        }
-      }
-      
-      reportHTML += '</details>';
-    }
-    
-    reportHTML += `
-      </details>
-      <p><a href="#table-of-contents">Back to Table of Contents</a></p>
-    `;
-  }
-  
-  reportElement.innerHTML = reportHTML;
-}
-
-// Setup event listeners
-function setupEventListeners() {
-  // Priority filters
-  document.getElementById('filter-p0').addEventListener('change', function() {
-    filterState.priority.P0 = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  document.getElementById('filter-p1').addEventListener('change', function() {
-    filterState.priority.P1 = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  document.getElementById('filter-p2').addEventListener('change', function() {
-    filterState.priority.P2 = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  // Type filters
-  document.getElementById('filter-added').addEventListener('change', function() {
-    filterState.type.added = this.checked;
-    filterState.type['file-added'] = this.checked;
-    filterState.type['folder-added'] = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  document.getElementById('filter-removed').addEventListener('change', function() {
-    filterState.type.removed = this.checked;
-    filterState.type['file-removed'] = this.checked;
-    filterState.type['folder-removed'] = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  document.getElementById('filter-modified').addEventListener('change', function() {
-    filterState.type.modified = this.checked;
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  // Category filters
-  const categoryCheckboxes = document.querySelectorAll('#category-filters input[type="checkbox"]');
-  categoryCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
-      filterState.category[this.dataset.category] = this.checked;
-      applyFilters();
-      updateUrlParams();
-    });
-  });
-  
-  // Search input
-  const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('input', function() {
-    filterState.search = this.value.toLowerCase();
-    applyFilters();
-    updateUrlParams();
-  });
-  
-  // Reset filters button
-  document.getElementById('btn-reset-filters').addEventListener('click', function() {
-    resetFilters();
-  });
-  
-  // Export buttons
-  document.getElementById('btn-export-pdf').addEventListener('click', function() {
-    window.print();
-  });
-  
-  document.getElementById('btn-export-html').addEventListener('click', function() {
-    exportHTML();
-  });
-  
-  document.getElementById('btn-export-md').addEventListener('click', function() {
-    exportMarkdown();
-  });
-  
-  document.getElementById('btn-export-json').addEventListener('click', function() {
-    exportJSON();
-  });
-}
-
-// Setup back to top button
-function setupBackToTop() {
-  const backToTopButton = document.getElementById('back-to-top');
-  
-  // Show button when page is scrolled down
-  window.addEventListener('scroll', function() {
-    if (window.pageYOffset > 300) {
-      backToTopButton.classList.add('visible');
-    } else {
-      backToTopButton.classList.remove('visible');
-    }
-  });
-  
-  // Scroll to top when button is clicked
-  backToTopButton.addEventListener('click', function() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-}
-
-// Export functions
-function exportHTML() {
-  // Create a standalone version of the current page
-  const htmlContent = document.documentElement.outerHTML;
-  
-  // Create a blob and download link
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'functional-change-report.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function exportMarkdown() {
-  // Use backend to generate markdown
-  window.location.href = 'functional-change-report.md';
-}
-
-function exportJSON() {
-  // Use backend to get JSON data
-  window.location.href = 'functional-change-data.json';
-}
+  <!-- Scripts -->
+  <script src="scripts/data-loader.js"></script>
+  <script src="scripts/filters.js"></script>
+  <script src="scripts/visualizations.js"></script>
+  <script src="scripts/interactivity.js"></script>
+</body>
+</html>

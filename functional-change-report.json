@@ -70,14 +70,12 @@
       },
       {
         "file": "groupAssigned.json",
-        "path": "/Users/kaushiksayeemohan/Library/CloudStorage/GoogleDrive-kaushiksm7@gmail.com/My Drive/1 Workflows/1 GTD/3 Organize/Reference Material/General Reference Material/Coding/JSON Comparison/connectors/current/okta/events/groupAssigned.json",
         "type": "file-added",
         "category": "events",
         "priority": "P1"
       },
       {
         "file": "userSuspended.json",
-        "path": "/Users/kaushiksayeemohan/Library/CloudStorage/GoogleDrive-kaushiksm7@gmail.com/My Drive/1 Workflows/1 GTD/3 Organize/Reference Material/General Reference Material/Coding/JSON Comparison/connectors/current/okta/events/userSuspended.json",
         "type": "file-added",
         "category": "events",
         "priority": "P1"

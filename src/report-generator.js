@@ -47,7 +47,7 @@ class ReportGenerator {
           continue;
         }
         
-        const outputPath = path.join(process.cwd(), `functional-change-report.${format}`);
+        const outputPath = path.join(process.cwd(), `functional-change-report.${format === 'html' ? 'html' : format === 'markdown' ? 'md' : 'json'}`);
         
         await this.reportGenerators[format](processedData, outputPath);
         
@@ -77,12 +77,18 @@ class ReportGenerator {
    * @returns {Array} - Processed data for reports
    */
   processReportData(comparisonResults) {
-    return comparisonResults.map(connectorReport => {
+    const fixedResults = comparisonResults.map(connectorReport => {
       // Ensure changes array exists
       const changes = connectorReport.changes || [];
       
-      // Process each change to add priority
+      // Process each change to add priority and fix paths
       const processedChanges = changes.map(change => {
+        // Clean up absolute paths in file paths
+        if (change.file && change.path && change.path.includes('/')) {
+          // Remove absolute path from file path
+          change.path = undefined;
+        }
+        
         return {
           ...change,
           priority: this.determinePriority(change)
@@ -95,6 +101,8 @@ class ReportGenerator {
         error: connectorReport.processingError
       };
     });
+    
+    return fixedResults;
   }
 
   /**
@@ -103,12 +111,17 @@ class ReportGenerator {
    * @returns {string} - Priority level (P0, P1, P2)
    */
   determinePriority(change) {
-    // Priority rules (simplified version)
+    // Priority rules
     const priorityRules = {
-      P0: ['auth', 'security', 'token', 'authentication', 'credential'],
+      P0: ['auth', 'security', 'token', 'authentication', 'credential', 'permission'],
       P1: ['actions', 'events', 'endpoint', 'trigger', 'method', 'output'],
       P2: ['metadata', 'description', 'version', 'icon']
     };
+    
+    // If change already has a priority, use it
+    if (change.priority) {
+      return change.priority;
+    }
     
     // Convert change to string for keyword matching
     const changeString = JSON.stringify(change).toLowerCase();
@@ -139,7 +152,8 @@ class ReportGenerator {
     processedData.forEach(connector => {
       connector.changes.forEach(change => {
         // Count by priority
-        stats.priority[change.priority] = (stats.priority[change.priority] || 0) + 1;
+        const priority = change.priority || 'P2';
+        stats.priority[priority] = (stats.priority[priority] || 0) + 1;
         
         // Count by change type
         stats.changeTypes[change.type] = (stats.changeTypes[change.type] || 0) + 1;
@@ -152,27 +166,11 @@ class ReportGenerator {
         stats.categories[category].total++;
         
         // Count by category and priority
-        const priorityKey = change.priority || 'P2';
-        stats.categories[category][priorityKey] = (stats.categories[category][priorityKey] || 0) + 1;
+        stats.categories[category][priority] = (stats.categories[category][priority] || 0) + 1;
       });
     });
     
     return stats;
-  }
-
-  /**
-   * Load template file
-   * @param {string} templateName - Template filename
-   * @returns {Promise<string>} - Template content
-   */
-  async loadTemplate(templateName) {
-    try {
-      const templatePath = path.join(process.cwd(), 'templates', templateName);
-      return await fs.readFile(templatePath, 'utf8');
-    } catch (error) {
-      logger.error(`Failed to load template ${templateName}`, error);
-      throw new Error(`Template not found: ${templateName}`);
-    }
   }
 }
 
