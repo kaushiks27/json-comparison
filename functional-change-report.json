@@ -8,12 +8,7 @@
         "oldVal": "Retrieves a user's profile.",
         "newVal": "Retrieves user details including MFA status.",
         "category": "actions",
-        "priority": "P2",
-        "significance": {
-          "label": "Minor",
-          "description": "Low-impact change with minimal system effect.",
-          "actionRequired": "Standard review process"
-        }
+        "priority": "P1"
       },
       {
         "type": "modified",
@@ -30,23 +25,13 @@
           "mfaEnabled"
         ],
         "category": "actions",
-        "priority": "P1",
-        "significance": {
-          "label": "Major",
-          "description": "Significant change affecting core features or system behavior.",
-          "actionRequired": "Detailed review and testing"
-        }
+        "priority": "P1"
       },
       {
         "type": "file-added",
-        "file": "actions/createUser.json",
+        "file": "createUser.json",
         "category": "actions",
-        "priority": "P1",
-        "significance": {
-          "label": "Major",
-          "description": "Significant change affecting core features or system behavior.",
-          "actionRequired": "Detailed review and testing"
-        }
+        "priority": "P1"
       },
       {
         "type": "modified",
@@ -54,81 +39,54 @@
         "oldVal": "OAuth2",
         "newVal": "API Key",
         "category": "auth",
-        "priority": "P0",
-        "significance": {
-          "label": "Critical",
-          "description": "Immediate attention required. Potential security or core functionality impact.",
-          "actionRequired": "Urgent review and mitigation"
-        }
+        "priority": "P0"
       },
       {
         "type": "removed",
         "path": "tokenUrl",
         "oldVal": "https://okta.com/oauth2/token",
         "category": "auth",
-        "priority": "P0",
-        "significance": {
-          "label": "Critical",
-          "description": "Immediate attention required. Potential security or core functionality impact.",
-          "actionRequired": "Urgent review and mitigation"
-        }
+        "priority": "P0"
       },
       {
         "type": "added",
         "path": "keyName",
         "newVal": "Authorization",
         "category": "auth",
-        "priority": "P2",
-        "significance": {
-          "label": "Minor",
-          "description": "Low-impact change with minimal system effect.",
-          "actionRequired": "Standard review process"
-        }
+        "priority": "P0"
       },
       {
         "type": "added",
         "path": "location",
         "newVal": "header",
         "category": "auth",
-        "priority": "P0",
-        "significance": {
-          "label": "Critical",
-          "description": "Immediate attention required. Potential security or core functionality impact.",
-          "actionRequired": "Urgent review and mitigation"
-        }
+        "priority": "P0"
       },
       {
         "type": "folder-added",
         "folder": "events",
         "category": "events",
-        "priority": "P1",
-        "significance": {
-          "label": "Major",
-          "description": "Significant change affecting core features or system behavior.",
-          "actionRequired": "Detailed review and testing"
-        }
+        "priority": "P1"
       },
       {
+        "file": "groupAssigned.json",
+        "path": "/Users/kaushiksayeemohan/Library/CloudStorage/GoogleDrive-kaushiksm7@gmail.com/My Drive/1 Workflows/1 GTD/3 Organize/Reference Material/General Reference Material/Coding/JSON Comparison/connectors/current/okta/events/groupAssigned.json",
         "type": "file-added",
-        "file": "events/groupAssigned.json",
         "category": "events",
-        "priority": "P1",
-        "significance": {
-          "label": "Major",
-          "description": "Significant change affecting core features or system behavior.",
-          "actionRequired": "Detailed review and testing"
-        }
+        "priority": "P1"
       },
       {
+        "file": "userSuspended.json",
+        "path": "/Users/kaushiksayeemohan/Library/CloudStorage/GoogleDrive-kaushiksm7@gmail.com/My Drive/1 Workflows/1 GTD/3 Organize/Reference Material/General Reference Material/Coding/JSON Comparison/connectors/current/okta/events/userSuspended.json",
         "type": "file-added",
-        "file": "events/userSuspended.json",
         "category": "events",
-        "priority": "P1",
-        "significance": {
-          "label": "Major",
-          "description": "Significant change affecting core features or system behavior.",
-          "actionRequired": "Detailed review and testing"
-        }
+        "priority": "P1"
+      },
+      {
+        "type": "folder-removed",
+        "folder": "meta",
+        "category": "meta",
+        "priority": "P2"
       },
       {
         "type": "modified",
@@ -136,12 +94,7 @@
         "oldVal": "1.0.0",
         "newVal": "1.1.0",
         "category": "metadata",
-        "priority": "P2",
-        "significance": {
-          "label": "Minor",
-          "description": "Low-impact change with minimal system effect.",
-          "actionRequired": "Standard review process"
-        }
+        "priority": "P2"
       },
       {
         "type": "modified",
@@ -156,23 +109,7 @@
           "Provisioning"
         ],
         "category": "metadata",
-        "priority": "P0",
-        "significance": {
-          "label": "Critical",
-          "description": "Immediate attention required. Potential security or core functionality impact.",
-          "actionRequired": "Urgent review and mitigation"
-        }
-      },
-      {
-        "type": "folder-removed",
-        "folder": "meta",
-        "category": "meta",
-        "priority": "P2",
-        "significance": {
-          "label": "Minor",
-          "description": "Low-impact change with minimal system effect.",
-          "actionRequired": "Standard review process"
-        }
+        "priority": "P0"
       }
     ]
   }
